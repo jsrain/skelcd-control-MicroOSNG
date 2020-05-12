@@ -118,24 +118,19 @@ make -C control check
 
 %install
 #
-# Add control file 
+# Add control file
 #
-mkdir -p $RPM_BUILD_ROOT/CD1
+mkdir -p $RPM_BUILD_ROOT/usr/lib/skelcd/CD1
+install -m 644 control/control.MicroOSNG.xml $RPM_BUILD_ROOT/usr/lib/skelcd/CD1/control.xml
 
-CONTROL_FILE=control.MicroOSNG.xml
-
-install -m 644 control/$CONTROL_FILE $RPM_BUILD_ROOT/CD1/control.xml
-
-%ifarch ppc ppc64
-sed -i -e "s,http://download.opensuse.org/distribution/,http://download.opensuse.org/ports/ppc/distribution/," $RPM_BUILD_ROOT/CD1/control.xml
-sed -i -e "s,http://download.opensuse.org/debug/,http://download.opensuse.org/ports/ppc/debug/," $RPM_BUILD_ROOT/CD1/control.xml
-sed -i -e "s,http://download.opensuse.org/source/,http://download.opensuse.org/ports/ppc/source/," $RPM_BUILD_ROOT/CD1/control.xml
-xmllint --noout --relaxng /usr/share/YaST2/control/control.rng $RPM_BUILD_ROOT/CD1/control.xml 
-%endif
+# install LICENSE (required by build service check)
+mkdir -p $RPM_BUILD_ROOT/%{_prefix}/share/doc/packages/%{name}
+install -m 644 LICENSE $RPM_BUILD_ROOT/%{_prefix}/share/doc/packages/%{name}
 
 %files
 %defattr(644,root,root,755)
-%dir /CD1
-/CD1/control.xml
+/usr/lib/skelcd
+%doc %dir %{_prefix}/share/doc/packages/%{name}
+%doc %{_prefix}/share/doc/packages/%{name}/LICENSE
 
 %changelog
